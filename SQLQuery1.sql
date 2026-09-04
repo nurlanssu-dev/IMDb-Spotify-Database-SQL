@@ -136,3 +136,54 @@ SELECT * FROM MovieActors;
 SELECT * FROM MovieDirectors;
 SELECT * FROM MovieGenres;
 
+SELECT Movies.Name, Movies.Rating, Genres.GenreName, 
+Directors.Name, Actors.Name
+FROM Movies
+JOIN MovieGenres
+ ON Movies.Id = MovieGenres.MovieId
+JOIN Genres
+ ON MovieGenres.GenreId= Genres.Id
+JOIN MovieDirectors
+ ON Movies.Id = MovieDirectors.MovieId
+JOIN Directors
+ ON MovieDirectors.DirectorId = Directors.Id
+JOIN MovieActors
+ ON Movies.Id = MovieActors.MovieId
+JOIN Actors
+ ON MovieActors.ActorId = Actors.Id
+ WHERE Movies.Rating >6
+
+SELECT Movies.Name, Movies.Rating, Genres.GenreName
+FROM Movies
+JOIN MovieGenres
+    ON MovieGenres.MovieId = Movies.Id
+JOIN Genres
+    ON MovieGenres.GenreId = Genres.Id
+WHERE Genres.GenreName LIKE '%a%';
+
+SELECT Movies.Name, Movies.Rating, Movies.Duration,Genres.GenreName
+FROM Movies
+JOIN MovieGenres
+ ON MovieGenres.MovieId = Movies.Id
+JOIN Genres
+ ON MovieGenres.GenreId = Genres.Id
+WHERE LEN(Movies.Name) >10 AND Movies.Name LIKE '%T'
+
+SELECT Movies.Name, Movies.Rating, Genres.GenreName, Directors.Name,
+Actors.Name
+FROM Movies
+JOIN MovieGenres
+ ON MovieGenres.MovieId = Movies.Id
+JOIN Genres
+ ON MovieGenres.GenreId = Genres.Id
+JOIN MovieDirectors
+ ON MovieDirectors.MovieId = Movies.Id
+JOIN Directors
+ ON MovieDirectors.DirectorId = Directors.Id
+JOIN MovieActors
+ ON MovieActors.MovieId = Movies.Id
+JOIN Actors
+ ON MovieActors.ActorId = Actors.Id
+WHERE Movies.Rating > 
+( SELECT AVG(Rating)FROM Movies)
+ORDER BY Movies.Rating DESC;
