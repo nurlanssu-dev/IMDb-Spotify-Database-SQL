@@ -187,3 +187,4 @@ JOIN Actors
 WHERE Movies.Rating > 
 ( SELECT AVG(Rating)FROM Movies)
 ORDER BY Movies.Rating DESC;
+
