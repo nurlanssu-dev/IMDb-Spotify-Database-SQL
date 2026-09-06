@@ -1,190 +1,67 @@
-CREATE DATABASE IMDB;
-USE IMDB;
+CREATE DATABASE Spotify
+USE Spotify;
 
-CREATE TABLE Movies
+CREATE TABLE Artists
 (
-Id INT PRIMARY KEY IDENTITY (1,1),
-Name VARCHAR(100) NOT NULL,
-Rating DECIMAL(2,1) NOT NULL,
-Duration INT NOT NULL
+Id INT PRIMARY KEY IDENTITY(1,1),
+[NAME] VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Directors
+CREATE TABLE Albums
 (
-Id INT PRIMARY KEY IDENTITY (1,1),
-Name VARCHAR(100) NOT NULL
+Id INT PRIMARY KEY IDENTITY(1,1),
+[NAME] VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Actors
+CREATE TABLE Musics
 (
-Id INT PRIMARY KEY IDENTITY (1,1),
-Name VARCHAR(100) NOT NULL
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Name VARCHAR(100) NOT NULL,
+    TotalSecond INT NOT NULL,
+
+    ArtistId INT,
+    AlbumId INT,
+
+    FOREIGN KEY (ArtistId)
+    REFERENCES Artists(Id),
+
+    FOREIGN KEY (AlbumId)
+    REFERENCES Albums(Id)
 );
 
-CREATE TABLE Genres
-(
-Id INT PRIMARY KEY IDENTITY (1,1),
-GenreName VARCHAR(100) NOT NULL
-);
+-- Artists insert
 
-CREATE TABLE MovieDirectors
-(
-DirectorId INT ,
-MovieId INT,
-
-FOREIGN KEY (DirectorId)
-    REFERENCES Directors(Id),
-
-    FOREIGN KEY (MovieId)
-    REFERENCES Movies(Id)
-);
-CREATE TABLE MovieActors
-(
-    MovieId INT,
-    ActorId INT,
-
-    PRIMARY KEY(MovieId, ActorId),
-
-    FOREIGN KEY(MovieId)
-    REFERENCES Movies(Id),
-
-    FOREIGN KEY(ActorId)
-    REFERENCES Actors(Id)
-);
-
-CREATE TABLE MovieGenres
-(
-    MovieId INT,
-    GenreId INT,
-
-    PRIMARY KEY(MovieId, GenreId),
-
-    FOREIGN KEY(MovieId)
-    REFERENCES Movies(Id),
-
-    FOREIGN KEY(GenreId)
-    REFERENCES Genres(Id)
-);
-
-INSERT INTO Directors(Name)
+INSERT INTO Artists([NAME])
 VALUES
-('Christopher Nolan'),
-('Francis Ford Coppola'),
-('Quentin Tarantino');
+('The Weeknd'),
+('Ed Sheeran'),
+('Imagine Dragons'),
+('Taylor Swift'),
+('Adele');
 
-INSERT INTO Actors(Name)
+
+-- Albums insert
+
+INSERT INTO Albums([NAME])
 VALUES
-('Christian Bale'),
-('Heath Ledger'),
-('Marlon Brando'),
-('Leonardo DiCaprio'),
-('Brad Pitt');
+('After Hours'),
+('Divide'),
+('Evolve'),
+('1989'),
+('25');
 
-INSERT INTO Genres(GenreName)
+
+-- Musics insert
+
+INSERT INTO Musics(Name, TotalSecond, ArtistId, AlbumId)
 VALUES
-('Action'),
-('Crime'),
-('Drama'),
-('Adventure'),
-('Thriller');
+('Blinding Lights', 200, 1, 1),
+('Save Your Tears', 215, 1, 1),
+('Shape Of You', 233, 2, 2),
+('Perfect', 263, 2, 2),
+('Believer', 204, 3, 3),
+('Thunder', 187, 3, 3),
+('Blank Space', 231, 4, 4),
+('Hello', 295, 5, 5);
 
-INSERT INTO Movies(Name, Rating, Duration)
-VALUES
-('The Dark Knight', 9.0, 152),
-('The Godfather', 9.2, 175),
-('Inception', 8.8, 148),
-('Fight Club', 8.8, 139),
-('Interstellar', 8.7, 169);
-
-SELECT * FROM Directors;
-
-SELECT * FROM Actors;
-
-SELECT * FROM Genres;
-
-SELECT * FROM Movies;
-
-INSERT INTO MovieActors(MovieId, ActorId)
-VALUES
-(1, 1), -- The Dark Knight - Christian Bale
-(1, 2), -- The Dark Knight - Heath Ledger
-(2, 3), -- The Godfather - Marlon Brando
-(3, 4), -- Inception - Leonardo DiCaprio
-(4, 5); -- Fight Club - Brad Pitt
-
-INSERT INTO MovieDirectors(DirectorId, MovieId)
-VALUES
-(1, 1),
-(2, 2),
-(1, 3),
-(1, 5);
-
-INSERT INTO MovieGenres(MovieId, GenreId)
-VALUES
-(1, 1),
-(1, 2),
-(2, 2),
-(2, 3),
-(3, 1),
-(3, 4),
-(4, 2),
-(4, 3),
-(5, 3),
-(5, 4);
-
-SELECT * FROM MovieActors;
-SELECT * FROM MovieDirectors;
-SELECT * FROM MovieGenres;
-
-SELECT Movies.Name, Movies.Rating, Genres.GenreName, 
-Directors.Name, Actors.Name
-FROM Movies
-JOIN MovieGenres
- ON Movies.Id = MovieGenres.MovieId
-JOIN Genres
- ON MovieGenres.GenreId= Genres.Id
-JOIN MovieDirectors
- ON Movies.Id = MovieDirectors.MovieId
-JOIN Directors
- ON MovieDirectors.DirectorId = Directors.Id
-JOIN MovieActors
- ON Movies.Id = MovieActors.MovieId
-JOIN Actors
- ON MovieActors.ActorId = Actors.Id
- WHERE Movies.Rating >6
-
-SELECT Movies.Name, Movies.Rating, Genres.GenreName
-FROM Movies
-JOIN MovieGenres
-    ON MovieGenres.MovieId = Movies.Id
-JOIN Genres
-    ON MovieGenres.GenreId = Genres.Id
-WHERE Genres.GenreName LIKE '%a%';
-
-SELECT Movies.Name, Movies.Rating, Movies.Duration,Genres.GenreName
-FROM Movies
-JOIN MovieGenres
- ON MovieGenres.MovieId = Movies.Id
-JOIN Genres
- ON MovieGenres.GenreId = Genres.Id
-WHERE LEN(Movies.Name) >10 AND Movies.Name LIKE '%T'
-
-SELECT Movies.Name, Movies.Rating, Genres.GenreName, Directors.Name,
-Actors.Name
-FROM Movies
-JOIN MovieGenres
- ON MovieGenres.MovieId = Movies.Id
-JOIN Genres
- ON MovieGenres.GenreId = Genres.Id
-JOIN MovieDirectors
- ON MovieDirectors.MovieId = Movies.Id
-JOIN Directors
- ON MovieDirectors.DirectorId = Directors.Id
-JOIN MovieActors
- ON MovieActors.MovieId = Movies.Id
-JOIN Actors
- ON MovieActors.ActorId = Actors.Id
-WHERE Movies.Rating > 
-( SELECT AVG(Rating)FROM Movies)
-ORDER BY Movies.Rating DESC;
 
