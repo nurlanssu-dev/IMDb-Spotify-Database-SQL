@@ -64,4 +64,18 @@ VALUES
 ('Blank Space', 231, 4, 4),
 ('Hello', 295, 5, 5);
 
+SELECT Musics.Name, Musics.TotalSecond, Artists.NAME, Albums.NAME
+FROM Musics
+JOIN Artists
+    ON Musics.ArtistId = Artists.Id
+JOIN Albums
+    ON Musics.AlbumId = Albums.Id;
 
+
+SELECT 
+    Albums.Name AS AlbumName,
+    COUNT(Musics.Id) AS MusicCount
+FROM Albums
+LEFT JOIN Musics
+    ON Albums.Id = Musics.AlbumId
+GROUP BY Albums.Name;
